@@ -43,6 +43,10 @@ public class UserService {
     return this.userRepository.findAll();
   }
 
+  public User getUserById(Long userId) {
+    return this.userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found"));
+  }
+
   public User createUser(User newUser) {
       newUser.setToken(UUID.randomUUID().toString());
     newUser.setStatus(UserStatus.OFFLINE);
@@ -56,6 +60,7 @@ public class UserService {
     log.debug("Created Information for User: {}", newUser);
     return newUser;
   }
+
 
   /**
    * This is a helper method that will check the uniqueness criteria of the
@@ -73,12 +78,39 @@ public class UserService {
 
     String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
     if (userByUsername != null && userByName != null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+      throw new ResponseStatusException(HttpStatus.CONFLICT,
           String.format(baseErrorMessage, "username and the name", "are"));
     } else if (userByUsername != null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username", "is"));
+      throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
     } else if (userByName != null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "name", "is"));
     }
+  }
+
+  public void updateUser(long userId, User newUserData){
+    User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + newUserData.getId() + " not found"));
+    if(newUserData.getName() != null){
+      user.setName(newUserData.getName());
+    }
+    if(newUserData.getUsername() != null){
+      user.setUsername(newUserData.getUsername());
+    }
+    if(newUserData.getPassword() != null){
+      user.setPassword(newUserData.getPassword());
+    }
+    if(newUserData.getBirthday() != null){
+      user.setBirthday(newUserData.getBirthday());
+    }
+    if(newUserData.getPassword() != null){
+      user.setPassword(newUserData.getPassword());
+    }
+    if(newUserData.getStatus() != null){
+      user.setStatus(newUserData.getStatus());
+    }
+    if(newUserData.getToken() != null){
+      user.setToken(newUserData.getToken());
+    }
+    userRepository.save(user);
+    userRepository.flush();
   }
 }

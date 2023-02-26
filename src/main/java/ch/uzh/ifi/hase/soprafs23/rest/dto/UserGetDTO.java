@@ -13,6 +13,13 @@ public class UserGetDTO {
   private String password;
   private Date creation_date;
   private Date birthday;
+  private String token;
+  public String getToken(){
+        return token;
+  }
+    public void setToken(String token){
+            this.token = token;
+    }
 
   public Date getBirthday(){
       return birthday;

@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,16 +43,31 @@ public class UserController {
     return userGetDTOs;
   }
 
-  @PostMapping("/users")
+  @GetMapping("/users/{userId}")
+  @ResponseStatus(HttpStatus.OK)
+  public UserGetDTO getUser(@PathVariable Long userId) {
+      return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserById(userId));
+  }
+
+
+    @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
   public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
     // convert API user to internal representation
     User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-
     // create user
     User createdUser = userService.createUser(userInput);
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
+
+    @PutMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateUser(@PathVariable Long userId, @RequestBody UserPostDTO userPostDTO) {
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        //UserId we want to update and UserInput (the new user data)
+        userService.updateUser(userId, userInput);
+    }
+
 }
