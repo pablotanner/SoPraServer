@@ -89,6 +89,7 @@ public class UserService {
 
   public void updateUser(long userId, User newUserData){
     User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + newUserData.getId() + " not found"));
+    //Check for each value if it has been specified and if so, update it
     if(newUserData.getName() != null){
       user.setName(newUserData.getName());
     }
