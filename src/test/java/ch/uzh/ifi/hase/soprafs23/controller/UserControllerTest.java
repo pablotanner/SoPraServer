@@ -89,7 +89,7 @@ public class UserControllerTest {
     // when/then -> do the request + validate the result
     MockHttpServletRequestBuilder postRequest = post("/users")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(asJsonString(userPostDTO))
+        .content(asJsonString(userPostDTO));
 
 
     // then
