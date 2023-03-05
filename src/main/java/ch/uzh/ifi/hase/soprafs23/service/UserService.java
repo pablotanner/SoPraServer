@@ -44,7 +44,8 @@ public class UserService {
   }
 
   public User getUserById(Long userId) {
-    return this.userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found"));
+    return this.userRepository.findById(userId).orElseThrow(() ->
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found"));
   }
 
   public User createUser(User newUser) {
@@ -88,7 +89,7 @@ public class UserService {
   }
 
   public void updateUser(long userId, User newUserData){
-    User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + newUserData.getId() + " not found"));
+    User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found"));
     //Check for each value if it has been specified and if so, update it
     if(newUserData.getName() != null){
       user.setName(newUserData.getName());
